@@ -1,12 +1,18 @@
+import BlogImages from "./components/BlogImages";
 import Header from "./components/Header";
-import Search from "./components/Search";
+
+import Layout from "./components/Layout";
+import { ImagesProvider } from "./context/ImagesContext";
 
 function App() {
   return (
-    <main>
+    <>
       <Header />
-      <Search />
-    </main>
+      <ImagesProvider>
+        <Layout />
+        <BlogImages />
+      </ImagesProvider>
+    </>
   );
 }
 
