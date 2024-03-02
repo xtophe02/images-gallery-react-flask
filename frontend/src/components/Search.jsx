@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { ImagesDispatchContext } from "../context/ImagesContext";
 
+const FLASK_APP_API_URL = process.env.FLASK_APP_API_URL;
+
 export default function Search() {
   const dispatch = useContext(ImagesDispatchContext);
   async function search(event) {
@@ -10,10 +12,10 @@ export default function Search() {
     // console.log(`You searched for '${query}'`);
 
     try {
-      const url = `https://api.unsplash.com/photos/random?query=${query}&client_id=${UNSPLASH_API_KEY}`;
+      const url = `${FLASK_APP_API_URL}/new-image?query=${query}`;
       const data = await fetch(url);
       const response = await data.json();
-      // console.log(response);
+      // console.log("RESPONSE", response);
       // id: action.id,
       // title: action.title,
       // description: action.description,
@@ -34,7 +36,7 @@ export default function Search() {
       console.error(error);
     }
   }
-  const UNSPLASH_API_KEY = process.env.UNSPLASH_API_KEY;
+
   return (
     <form onSubmit={search}>
       <div className="mt-7 grid gap-3 w-full sm:inline-flex">
