@@ -10,4 +10,14 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
+  preview: {
+    port: 3000,
+    strictPort: true,
+  },
+  server: {
+    port: 3000,
+    strictPort: true,
+    host: true,
+    origin: "http://0.0.0.0:3000",
+  },
 });
