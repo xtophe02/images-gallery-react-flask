@@ -1,19 +1,12 @@
 import { useContext } from "react";
 import { ImagesDispatchContext } from "../context/ImagesContext";
 
+const FLASK_APP_API_URL = "http://localhost:5050";
 // const FLASK_APP_API_URL =
-//   process.env.VITE_FLASK_APP_API_URL || "http://localhost:5050";
-const FLASK_APP_API_URL =
-  import.meta.env.VITE_FLASK_APP_API_URL || "http://localhost:5050";
+//   import.meta.env.VITE_FLASK_APP_API_URL || "http://localhost:5050";
 
-// const FLASK_APP_API_URL =
-//   process.env.FLASK_APP_API_URL || "http://localhost:5050";
-
-// if (!FLASK_APP_API_URL) {
-//   throw new Error("FLASK_APP_API_URL is not defined");
-// }
 console.log("FLASK_APP_API_URL", FLASK_APP_API_URL);
-console.log(import.meta.env);
+// console.log(import.meta.env);
 export default function Search() {
   const dispatch = useContext(ImagesDispatchContext);
   async function search(event) {
