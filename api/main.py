@@ -1,8 +1,13 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from requests import get
 import os
 from flask_cors import CORS
+from mongo_client import mongo_client
+
+
+gallery = mongo_client.gallery
+images_collection = gallery.images
 
 
 load_dotenv()
@@ -16,6 +21,7 @@ if not UNSPLASH_API_KEY:
 
 app = Flask(__name__)
 CORS(app)
+
 # Check the FLASK_ENV environment variable
 if os.environ.get('FLASK_ENV') == 'production':
     # Production configuration
@@ -38,6 +44,39 @@ def new_image():
     reponse = get(UNSPLASH_URL, headers=headers, params={"query": query})
     data = reponse.json()
     return data
+
+
+@app.route('/images/<id>', methods=['DELETE'])
+def delete_image(id):
+    if not id:
+        return {"error": "id is required"}, 400
+    images_collection.delete_one({"_id": id})
+    return {"status": "success delete"}
+
+
+@app.route('/images', methods=['GET', 'POST', 'OPTIONS', 'DELETE'])
+def images():
+    if request.method == 'OPTIONS':
+        # Preflight request. Respond successfully:
+        return jsonify({}), 200, {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Accept',
+        }
+    if request.method == 'GET':
+        images = images_collection.find()
+
+        return list(images)
+    elif request.method == 'POST':
+
+        image = request.json
+        if not image:
+            return {"error": "image is required"}, 400
+        image["_id"] = image["id"]
+
+        return jsonify(images_collection.insert_one(image).inserted_id)
+    else:
+        return {"error": "method not allowed"}, 405
 
 
 if __name__ == '__main__':

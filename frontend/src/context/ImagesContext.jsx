@@ -9,28 +9,25 @@ export const ImagesDispatchContext = createContext(null);
 function imagesReducer(images, action) {
   switch (action.type) {
     case "added": {
-      // Adding a new image to the images array
-      return [
-        ...images,
-        {
-          id: action.id,
-          title: action.title,
-          description: action.description,
-          url_regular: action.url_regular,
-          url_small: action.url_small,
-        },
-      ];
+      // Adding a new image to the images array and setting saved to false
+      const existingImage = images.find((img) => img.id === action.id);
+      if (!existingImage) {
+        return [
+          ...images,
+          {
+            id: action.id,
+            title: action.title,
+            description: action.description,
+            url_regular: action.url_regular,
+            url_small: action.url_small,
+            saved: action.saved || false,
+          },
+        ];
+      }
+
+      return images;
     }
-    case "changed": {
-      // TODO: Implement the logic to update an existing image
-      // return images.map((image) => {
-      //   if (image.id === action.image.id) {
-      //     return action.image;
-      //   } else {
-      //     return image;
-      //   }
-      // });
-    }
+
     case "deleted": {
       // Removing an image from the images array based on its id
       return images.filter((image) => image.id !== action.id);

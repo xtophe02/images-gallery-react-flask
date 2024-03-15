@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { ImagesDispatchContext } from "../context/ImagesContext";
+import axios from "axios";
 
 const FLASK_APP_API_URL = "http://localhost:5050";
 // const FLASK_APP_API_URL =
@@ -17,22 +18,16 @@ export default function Search() {
 
     try {
       const url = `${FLASK_APP_API_URL}/new-image?query=${query}`;
-      const data = await fetch(url);
-      const response = await data.json();
-      // console.log("RESPONSE", response);
-      // id: action.id,
-      // title: action.title,
-      // description: action.description,
-      // alt_description: action.alt_description,
-      // url_regular: action.url_regular,
-      // url_small: action.url_small,
+      const { data } = await axios.get(url);
+
+      console.log("RESPONSE", data);
       dispatch({
         type: "added",
-        id: response.id,
-        title: response.alt_description,
-        description: response.description,
-        url_regular: response.urls.regular,
-        url_small: response.urls.small,
+        id: data.id,
+        title: data.alt_description,
+        description: data.description,
+        url_regular: data.urls.regular,
+        url_small: data.urls.small,
       });
 
       event.target.reset();
