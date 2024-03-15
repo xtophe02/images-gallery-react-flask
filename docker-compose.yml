@@ -26,29 +26,34 @@ services:
       - api
     volumes:
       - /app/node_modules
-      # - //wsl.localhost/Ubuntu/home/chrismo/documents/projects/python/flask/images-gallery/frontend:/app
       - ./frontend/:/app
-  postgres:
-    image: postgres:latest
+  #New MongoDB service
+  mongo:
+    image: mongo:latest
     restart: always
-    environment:
-      POSTGRES_DB: db_images_gallery
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - 27017:27017 # Map host port 27017 to container port 27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      # MONGO_INITDB_DATABASE: images
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongo-data:/data/db # Create a named volume to persist data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: moreira.christophe@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+  # New Mongo-Express service
+  mongo-express:
+    image: mongo-express
+    restart: always
     ports:
-      - "5051:80"
+      - 8081:8081 # Map host port 8081 to container port 8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo # Use the service name to connect to the MongoDB container
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+      # ME_CONFIG_MONGODB_URL: mongodb://root:very-strong-db-password@mongo:27017/images-gallery?authSource=admin # Use the service name to connect to the MongoDB container
     depends_on:
-      - postgres
+      - mongo # Wait for MongoDB to start before starting Mongo-Express
 
 volumes:
-  postgres_data:
+  mongo-data:
+  node_modules:

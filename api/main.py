@@ -4,6 +4,7 @@ from requests import get
 import os
 from flask_cors import CORS
 
+
 load_dotenv()
 
 UNSPLASH_URL = 'https://api.unsplash.com/photos/random'
